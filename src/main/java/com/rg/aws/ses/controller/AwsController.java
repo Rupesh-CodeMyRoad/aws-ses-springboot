@@ -29,4 +29,10 @@ public class AwsController {
         return emailService.sendTemplateAttachEmail(emailDetails);
     }
 
+    @PostMapping("/sendPersonalizedTemplateEmail")
+    public String sendPersonalizedTemplateEmail(@RequestBody EmailDetails emailDetails) {
+        return emailService.sendPersonalizedTemplateEmail(emailDetails);
+    }
+
+
 }

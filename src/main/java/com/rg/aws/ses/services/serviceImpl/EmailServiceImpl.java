@@ -1,11 +1,13 @@
 package com.rg.aws.ses.services.serviceImpl;
 
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.model.Destination;
+import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
 import com.rg.aws.ses.Dto.EmailDetails;
 import com.rg.aws.ses.services.EmailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,9 +17,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -30,6 +30,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private Configuration config;
+
+    @Autowired
+    private AmazonSimpleEmailService simpleEmailService;
 
     @Override
     public String sendMessage(EmailDetails emailDetails) {
@@ -97,6 +100,27 @@ public class EmailServiceImpl implements EmailService {
             helper.setFrom(Objects.requireNonNull(emailDetails.getFromEmail()));
             javaMailSender.send(message);
 
+        } catch (Exception e) {
+            return "Exception: " + e.getLocalizedMessage();
+        }
+        return "Mail Send Success";
+    }
+
+    public String sendPersonalizedTemplateEmail(EmailDetails emailDetails) {
+
+        try {
+            Destination destination = new Destination();
+            List<String> toAddresses = new ArrayList<>();
+            String[] emails = emailDetails.getToEmailList();
+            Collections.addAll(toAddresses, Objects.requireNonNull(emails));
+            destination.setToAddresses(toAddresses);
+
+            SendTemplatedEmailRequest templatedEmailRequest = new SendTemplatedEmailRequest();
+            templatedEmailRequest.withDestination(destination);
+            templatedEmailRequest.withTemplate("MyTemplate");
+            templatedEmailRequest.withTemplateData("{ \"name\":\"Rupesh Regmi\", \"location\": \"Pokhara, Nepal\"}");
+            templatedEmailRequest.withSource(emailDetails.getFromEmail());
+            simpleEmailService.sendTemplatedEmail(templatedEmailRequest);
         } catch (Exception e) {
             return "Exception: " + e.getLocalizedMessage();
         }

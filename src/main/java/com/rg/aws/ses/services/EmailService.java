@@ -9,4 +9,6 @@ public interface EmailService {
     String sendAttachMessage(EmailDetails emailDetails);
 
     String sendTemplateAttachEmail(EmailDetails emailDetails);
+
+    String sendPersonalizedTemplateEmail(EmailDetails emailDetails);
 }

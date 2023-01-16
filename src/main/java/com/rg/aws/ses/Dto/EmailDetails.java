@@ -14,5 +14,7 @@ public class EmailDetails {
     String subject;
     String body;
 
+    String[] toEmailList;
+
     MultipartFile attachment;
 }
