@@ -1,4 +1,4 @@
-package com.rg.sws.ses;
+package com.rg.aws.ses;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

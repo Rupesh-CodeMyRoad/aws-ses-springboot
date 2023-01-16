@@ -1,4 +1,4 @@
-package com.rg.sws.ses;
+package com.rg.aws.ses;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
