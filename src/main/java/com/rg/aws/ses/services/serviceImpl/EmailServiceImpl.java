@@ -139,8 +139,8 @@ public class EmailServiceImpl implements EmailService {
 
             SendTemplatedEmailRequest templatedEmailRequest = new SendTemplatedEmailRequest();
             templatedEmailRequest.withDestination(destination);
-            templatedEmailRequest.withTemplate("MyTemplate");
-            templatedEmailRequest.withTemplateData("{ \"name\":\"Rupesh Regmi\", \"location\": \"Pokhara, Nepal\"}");
+            templatedEmailRequest.withTemplate("MyTemp");
+            templatedEmailRequest.withTemplateData("{ \"name\":\"Rupesh Regmi\"}");
             templatedEmailRequest.withSource(emailDetails.getFromEmail());
             simpleEmailService.sendTemplatedEmail(templatedEmailRequest);
         }catch(MailException me)
