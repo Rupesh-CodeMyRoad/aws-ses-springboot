@@ -1,7 +1,6 @@
 package com.rg.aws.ses.services;
 
-import com.rg.aws.ses.Dto.EmailDetails;
-import org.springframework.stereotype.Service;
+import com.rg.aws.ses.dto.EmailDetails;
 
 public interface EmailService {
     String sendMessage(EmailDetails emailDetails);

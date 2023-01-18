@@ -1,8 +1,9 @@
 package com.rg.aws.ses.controller;
 
-import com.rg.aws.ses.Dto.EmailDetails;
+import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

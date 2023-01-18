@@ -1,4 +1,4 @@
-package com.rg.aws.ses.Dto;
+package com.rg.aws.ses.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

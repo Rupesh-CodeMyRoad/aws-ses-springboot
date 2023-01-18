@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.mail.internet.MimeMessage;
+
+import com.rg.aws.ses.utils.EmailValidation;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -22,7 +24,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
-import com.rg.aws.ses.Dto.EmailDetails;
+import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.exception.BusinessException;
 import com.rg.aws.ses.services.EmailService;
 
@@ -45,21 +47,28 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private AmazonSimpleEmailService simpleEmailService;
 
+
     @Override
     public String sendMessage(EmailDetails emailDetails) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(emailDetails.getFromEmail());
+        if (EmailValidation.validate(emailDetails.getFromEmail())) {
+            simpleMailMessage.setFrom(emailDetails.getFromEmail());
+        }else {
+            throw new BusinessException("Email address Mismatch");
+        }
         simpleMailMessage.setTo(emailDetails.getToEmail());
         simpleMailMessage.setSubject(emailDetails.getSubject());
         simpleMailMessage.setText(emailDetails.getBody());
+//        simpleMailMessage.setCc("rupeshgr015330@nec.edu.np");
+//        simpleMailMessage.setBcc("rupeshgaudel3@gmail.com");
         try {
             this.mailSender.send(simpleMailMessage);
         }
-        catch(MailException me)
-        {    
-         log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));	
-         throw   new BusinessException("mail exception occure please varify your request once and try again",me);
-        }
+//        catch(MailException me)
+//        {
+//         log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));
+//         throw   new BusinessException("mail exception occure please varify your request once and try again",me);
+//        }
         catch (Exception e) {
             return "Exception: " + e.getLocalizedMessage();
         }
@@ -83,6 +92,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(Objects.requireNonNull(emailDetails.getBody()));
             helper.setSubject(Objects.requireNonNull(emailDetails.getSubject()));
             helper.setFrom(Objects.requireNonNull(emailDetails.getFromEmail()));
+//            helper.setCc("aaa@gmail.com");
+//            helper.setBcc("abc@gmail.com");
             javaMailSender.send(message);
 
         }catch(MailException me)
@@ -120,6 +131,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(html, true);
             helper.setSubject(Objects.requireNonNull(emailDetails.getSubject()));
             helper.setFrom(Objects.requireNonNull(emailDetails.getFromEmail()));
+//            helper.setCc("aaa@gmail.com");
+//            helper.setBcc("abc@gmail.com");
             javaMailSender.send(message);
 
         } catch (Exception e) {
@@ -136,6 +149,8 @@ public class EmailServiceImpl implements EmailService {
             String[] emails = emailDetails.getToEmailList();
             Collections.addAll(toAddresses, Objects.requireNonNull(emails));
             destination.setToAddresses(toAddresses);
+//            destination.setCcAddresses(toAddresses);
+//            destination.setBccAddresses(toAddresses);
 
             SendTemplatedEmailRequest templatedEmailRequest = new SendTemplatedEmailRequest();
             templatedEmailRequest.withDestination(destination);
