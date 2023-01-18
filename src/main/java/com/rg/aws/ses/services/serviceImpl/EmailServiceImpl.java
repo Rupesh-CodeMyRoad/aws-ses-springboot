@@ -64,11 +64,11 @@ public class EmailServiceImpl implements EmailService {
         try {
             this.mailSender.send(simpleMailMessage);
         }
-//        catch(MailException me)
-//        {
-//         log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));
-//         throw   new BusinessException("mail exception occure please varify your request once and try again",me);
-//        }
+        catch(MailException me)
+        {
+         log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));
+         throw   new BusinessException("mail exception occure please varify your request once and try again",me);
+        }
         catch (Exception e) {
             return "Exception: " + e.getLocalizedMessage();
         }
