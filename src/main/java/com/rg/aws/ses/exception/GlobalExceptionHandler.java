@@ -1,7 +1,7 @@
 package com.rg.aws.ses.exception;
 
 
-import com.rg.aws.ses.utils.AWSResponseCode;
+import com.rg.aws.ses.utils.AWSErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 ApplicationErrorResponse.builder()
                         .errorMessage(exception.getMessage())
-                        .errorCode(HttpStatus.valueOf(AWSResponseCode.TEMPLATE_DOES_NOT_EXIST.getCode()))
+                        .errorCode(HttpStatus.valueOf(AWSErrorCode.TEMPLATE_DOES_NOT_EXIST.getCode()))
                         .customMessage("Template Doesn't Exist on AWS.")
                         .build(), HttpStatus.BAD_REQUEST);
 

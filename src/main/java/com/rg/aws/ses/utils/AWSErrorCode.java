@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum AWSResponseCode {
+public enum AWSErrorCode {
 
     ACCOUNT_SENDING_PAUSED(400, "AccountSendingPaused", "Email sending is disabled for your entire Amazon SES account."),
     CONFIGURATION_SET_DOES_NOT_EXIST(400, "ConfigurationSetDoesNotExist", "Configuration set does not exist."),
@@ -29,8 +29,8 @@ public enum AWSResponseCode {
      * @param code code value
      * @return ResponseCode
      */
-    public static AWSResponseCode getResponseCode(int code) {
-        for (AWSResponseCode rc : values()) {
+    public static AWSErrorCode getResponseCode(int code) {
+        for (AWSErrorCode rc : values()) {
             if (rc.getCode() == code) {
                 return rc;
             }
