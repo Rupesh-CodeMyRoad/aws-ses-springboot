@@ -39,4 +39,24 @@ public class GlobalExceptionHandler {
 
     }
 
+    /**
+     * Catches a TemplateNotFoundException
+     *
+     * @param exception represents the caught exception
+     * @return AWS error response
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EmailValidationException.class)
+    public ResponseEntity<ApplicationErrorResponse> emailMisMatchException(EmailValidationException exception) {
+        log.info("Email address not acceptable Error: {}", exception.getMessage());
+        log.error("EmailValidationException", exception);
+        return new ResponseEntity<>(
+                ApplicationErrorResponse.builder()
+                        .errorMessage(exception.getMessage())
+                        .errorCode(HttpStatus.BAD_REQUEST)
+                        .customMessage("Email address not acceptable.")
+                        .build(), HttpStatus.BAD_REQUEST);
+
+    }
+
 }

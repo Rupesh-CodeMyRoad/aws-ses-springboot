@@ -7,9 +7,11 @@ import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendTemplatedEmailResult;
 import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
+import com.rg.aws.ses.exception.EmailValidationException;
 import com.rg.aws.ses.exception.TemplateException;
 import com.rg.aws.ses.services.EmailService;
 import com.rg.aws.ses.utils.AWSErrorCode;
+import com.rg.aws.ses.utils.EmailValidation;
 import freemarker.template.Configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,7 @@ public class EmailServiceImpl implements EmailService {
 
         AWSResponse awsResponse = null;
         try {
+            EmailValidation.validateEmails(emailDetails);
             Destination destination = new Destination();
             List<String> toAddresses = new ArrayList<>();
             String[] emails = emailDetails.getToEmailList();
@@ -158,6 +161,7 @@ public class EmailServiceImpl implements EmailService {
         }
         return awsResponse;
     }
+
 
     private void handleException(AmazonSimpleEmailServiceException e) {
         if (e.getStatusCode() == 400 && e.getErrorCode().equals(AWSErrorCode.TEMPLATE_DOES_NOT_EXIST.getErrorCode())) {
