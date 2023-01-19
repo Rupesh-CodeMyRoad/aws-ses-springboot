@@ -40,10 +40,10 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Catches a TemplateNotFoundException
+     * Catches a EmailValidationException
      *
      * @param exception represents the caught exception
-     * @return AWS error response
+     * @return Email error response
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmailValidationException.class)
