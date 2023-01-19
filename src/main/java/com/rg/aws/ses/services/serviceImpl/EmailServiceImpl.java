@@ -1,16 +1,18 @@
 package com.rg.aws.ses.services.serviceImpl;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.mail.internet.MimeMessage;
-
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.model.AmazonSimpleEmailServiceException;
+import com.amazonaws.services.simpleemail.model.Destination;
+import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
+import com.amazonaws.services.simpleemail.model.SendTemplatedEmailResult;
+import com.rg.aws.ses.dto.EmailDetails;
+import com.rg.aws.ses.exception.TemplateException;
+import com.rg.aws.ses.services.EmailService;
+import com.rg.aws.ses.utils.AWSResponseCode;
 import com.rg.aws.ses.utils.EmailValidation;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -21,16 +23,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
-import com.rg.aws.ses.dto.EmailDetails;
-import com.rg.aws.ses.exception.BusinessException;
-import com.rg.aws.ses.services.EmailService;
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -53,8 +49,8 @@ public class EmailServiceImpl implements EmailService {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         if (EmailValidation.validate(emailDetails.getFromEmail())) {
             simpleMailMessage.setFrom(emailDetails.getFromEmail());
-        }else {
-            throw new BusinessException("Email address Mismatch");
+        } else {
+            throw new TemplateException("Email address Mismatch");
         }
         simpleMailMessage.setTo(emailDetails.getToEmail());
         simpleMailMessage.setSubject(emailDetails.getSubject());
@@ -63,13 +59,10 @@ public class EmailServiceImpl implements EmailService {
 //        simpleMailMessage.setBcc("rupeshgaudel3@gmail.com");
         try {
             this.mailSender.send(simpleMailMessage);
-        }
-        catch(MailException me)
-        {
-         log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));
-         throw   new BusinessException("mail exception occure please varify your request once and try again",me);
-        }
-        catch (Exception e) {
+        } catch (MailException me) {
+            log.error("mail cann't be send due to :{}", ExceptionUtils.getStackTrace(me));
+            throw new TemplateException("mail exception occure please varify your request once and try again", me);
+        } catch (Exception e) {
             return "Exception: " + e.getLocalizedMessage();
         }
         return "Mail Send Success";
@@ -96,12 +89,10 @@ public class EmailServiceImpl implements EmailService {
 //            helper.setBcc("abc@gmail.com");
             javaMailSender.send(message);
 
-        }catch(MailException me)
-        {    
-            log.error("mail cann't be send due to :{}",ExceptionUtils.getStackTrace(me));	
-            throw   new BusinessException("mail exception occure please varify your request once and try again",me);
-           }
-        catch (Exception e) {
+        } catch (MailException me) {
+            log.error("mail cann't be send due to :{}", ExceptionUtils.getStackTrace(me));
+            throw new TemplateException("mail exception occure please varify your request once and try again", me);
+        } catch (Exception e) {
             return "Exception: " + e.getLocalizedMessage();
         }
         return "Mail Send Success";
@@ -154,18 +145,21 @@ public class EmailServiceImpl implements EmailService {
 
             SendTemplatedEmailRequest templatedEmailRequest = new SendTemplatedEmailRequest();
             templatedEmailRequest.withDestination(destination);
-            templatedEmailRequest.withTemplate("MyTemp");
+            templatedEmailRequest.withTemplate("MyTe");
             templatedEmailRequest.withTemplateData("{ \"name\":\"Rupesh Regmi\"}");
             templatedEmailRequest.withSource(emailDetails.getFromEmail());
-            simpleEmailService.sendTemplatedEmail(templatedEmailRequest);
-        }catch(MailException me)
-          {    
-            log.error("mail cann't be send due to :{}",me.getStackTrace());	
-            throw   new BusinessException("mail exception occure please varify your request once and try again",me);
-           }
-        catch (Exception e) {
-            return "Exception: " + e.getLocalizedMessage();
+            SendTemplatedEmailResult response = simpleEmailService.sendTemplatedEmail(templatedEmailRequest);
+            System.out.println(response);
+        } catch (AmazonSimpleEmailServiceException e) {
+            log.error("Mail cannot be send due to :{}", e.getStackTrace());
+            handleException(e);
         }
         return "Mail Send Success";
+    }
+
+    private void handleException(AmazonSimpleEmailServiceException e) {
+        if (e.getStatusCode() == 400 && e.getErrorCode().equals(AWSResponseCode.TEMPLATE_DOES_NOT_EXIST.getErrorCode())){
+            throw new TemplateException(e.getErrorMessage(),e);
+        }
     }
 }
