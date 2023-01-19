@@ -10,23 +10,17 @@ import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.exception.TemplateException;
 import com.rg.aws.ses.services.EmailService;
 import com.rg.aws.ses.utils.AWSErrorCode;
-import com.rg.aws.ses.utils.EmailValidation;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import javax.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -151,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
             templatedEmailRequest.withTemplateData("{ \"name\":\"Rupesh Regmi\"}");
             templatedEmailRequest.withSource(emailDetails.getFromEmail());
             SendTemplatedEmailResult response = simpleEmailService.sendTemplatedEmail(templatedEmailRequest);
-            if (response.getSdkHttpMetadata().getHttpStatusCode() == 200){
+            if (response.getSdkHttpMetadata().getHttpStatusCode() == 200) {
                 awsResponse = new AWSResponse().builder()
                         .messageId(response.getMessageId())
                         .awsRequestId(response.getSdkResponseMetadata().getRequestId())
@@ -166,8 +160,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void handleException(AmazonSimpleEmailServiceException e) {
-        if (e.getStatusCode() == 400 && e.getErrorCode().equals(AWSErrorCode.TEMPLATE_DOES_NOT_EXIST.getErrorCode())){
-            throw new TemplateException(e.getErrorMessage(),e);
+        if (e.getStatusCode() == 400 && e.getErrorCode().equals(AWSErrorCode.TEMPLATE_DOES_NOT_EXIST.getErrorCode())) {
+            throw new TemplateException(e.getErrorMessage(), e);
         }
     }
 }
