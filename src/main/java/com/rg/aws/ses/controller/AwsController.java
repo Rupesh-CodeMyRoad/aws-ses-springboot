@@ -15,20 +15,20 @@ public class AwsController {
     @Autowired
     private EmailService emailService;
 
-//    @PostMapping("/sendEmail")
-//    public String sendEmail(@RequestBody EmailDetails emailDetails) {
-//        return emailService.sendMessage(emailDetails);
-//    }
-//
-//    @PostMapping("/sendAttachEmail")
-//    public String sendAttachEmail(@ModelAttribute EmailDetails emailDetails) {
-//        return emailService.sendAttachMessage(emailDetails);
-//    }
-//
-//    @PostMapping("/sendTemplateAttachEmail")
-//    public String sendTemplateAttachEmail(@ModelAttribute EmailDetails emailDetails) {
-//        return emailService.sendTemplateAttachEmail(emailDetails);
-//    }
+    @PostMapping("/sendEmail")
+    public String sendEmail(@RequestBody EmailDetails emailDetails) {
+        return emailService.sendMessage(emailDetails);
+    }
+
+    @PostMapping("/sendAttachEmail")
+    public String sendAttachEmail(@ModelAttribute EmailDetails emailDetails) {
+        return emailService.sendAttachMessage(emailDetails);
+    }
+
+    @PostMapping("/sendTemplateAttachEmail")
+    public String sendTemplateAttachEmail(@ModelAttribute EmailDetails emailDetails) {
+        return emailService.sendTemplateAttachEmail(emailDetails);
+    }
 
     @PostMapping("/sendPersonalizedTemplateEmail")
     public ResponseEntity<?> sendPersonalizedTemplateEmail(@RequestBody EmailDetails emailDetails) {
