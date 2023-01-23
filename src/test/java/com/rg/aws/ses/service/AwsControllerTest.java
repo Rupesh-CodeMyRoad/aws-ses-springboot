@@ -15,6 +15,8 @@ import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.services.EmailService;
 
+import java.util.Arrays;
+
 @SpringBootTest
 public class AwsControllerTest {
 
@@ -40,7 +42,7 @@ public class AwsControllerTest {
 		//awsResponse.setAwsRequestId(accessKey);
 		EmailDetails emailDetails = new EmailDetails();
 		emailDetails.setFromEmail(from);
-		emailDetails.setToEmailList(to);
+		emailDetails.setToEmailList(Arrays.asList(to));
 		emailDetails.setSubject("Invitation for new year celebration");
 		emailDetails.setBody("The happiness of the upcoming year is a few days away. We are waiting for you to join us on the dance floor on new year’s eve. ");
 		//when(emailService.sendPersonalizedTemplateEmail(emailDetails)).thenReturn(awsResponse);
