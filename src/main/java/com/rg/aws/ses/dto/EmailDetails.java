@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -14,7 +16,7 @@ public class EmailDetails {
     String subject;
     String body;
 
-    String[] toEmailList;
+    List<String> toEmailList;
 
     MultipartFile attachment;
 }

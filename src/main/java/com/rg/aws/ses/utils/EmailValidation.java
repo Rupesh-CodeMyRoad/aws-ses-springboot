@@ -19,7 +19,7 @@ public class EmailValidation {
     public static void validateEmails(EmailDetails emailDetails) {
         if (EmailValidation.validate(emailDetails.getFromEmail())) {
             log.error("From mail : {}", emailDetails.getFromEmail());
-            if (emailDetails.getToEmailList().length == 0) {
+            if (emailDetails.getToEmailList().isEmpty()) {
                 if (EmailValidation.validate(emailDetails.getToEmail())) {
                     log.error("To mail : {}", emailDetails.getToEmail());
                 } else {

@@ -1,10 +1,7 @@
 package com.rg.aws.ses.services.serviceImpl;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.AmazonSimpleEmailServiceException;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
-import com.amazonaws.services.simpleemail.model.SendTemplatedEmailResult;
+import com.amazonaws.services.simpleemail.model.*;
 import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.exception.EmailValidationException;
@@ -130,14 +127,39 @@ public class EmailServiceImpl implements EmailService {
 //    }
 
     public AWSResponse sendPersonalizedTemplateEmail(EmailDetails emailDetails) {
+        return sendAwsMail(emailDetails);
+    }
 
+    @Override
+    public AWSResponse sendMailToVerifiedUsers(EmailDetails emailDetails) {
+        List<String> verifiedUsers = ListEmailIdentities.listSESIdentities();
+        emailDetails.setToEmailList(verifiedUsers);
+        return sendAwsMail(emailDetails);
+    }
+
+    @Override
+    public String sendVerificationEmail(String email) {
+        SendCustomVerificationEmailRequest sendCustomVerificationEmailRequest = new SendCustomVerificationEmailRequest();
+        sendCustomVerificationEmailRequest.setEmailAddress(email);
+        sendCustomVerificationEmailRequest.setTemplateName("MyTemp");
+        try {
+            SendCustomVerificationEmailResult response = simpleEmailService.sendCustomVerificationEmail(sendCustomVerificationEmailRequest);
+            System.out.println(response);
+        }catch (AmazonSimpleEmailServiceException e){
+            throw new RuntimeException(e.getErrorMessage());
+        }
+        return "test";
+    }
+
+
+
+
+    private AWSResponse sendAwsMail(EmailDetails emailDetails) {
         AWSResponse awsResponse = null;
         try {
             EmailValidation.validateEmails(emailDetails);
             Destination destination = new Destination();
-            List<String> toAddresses = new ArrayList<>();
-            String[] emails = emailDetails.getToEmailList();
-            Collections.addAll(toAddresses, Objects.requireNonNull(emails));
+            List<String> toAddresses = emailDetails.getToEmailList();
             destination.setToAddresses(toAddresses);
 //            destination.setCcAddresses(toAddresses);
 //            destination.setBccAddresses(toAddresses);
@@ -161,7 +183,6 @@ public class EmailServiceImpl implements EmailService {
         }
         return awsResponse;
     }
-
 
     private void handleException(AmazonSimpleEmailServiceException e) {
         if (e.getStatusCode() == 400 && e.getErrorCode().equals(AWSErrorCode.TEMPLATE_DOES_NOT_EXIST.getErrorCode())) {

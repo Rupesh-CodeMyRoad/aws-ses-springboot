@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AwsController {
@@ -36,6 +33,18 @@ public class AwsController {
     @PostMapping("/sendPersonalizedTemplateEmail")
     public ResponseEntity<?> sendPersonalizedTemplateEmail(@RequestBody EmailDetails emailDetails) {
         AWSResponse response = emailService.sendPersonalizedTemplateEmail(emailDetails);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sendMailToVerifiedUsers")
+    public ResponseEntity<?> sendMailToVerifiedUsers(@RequestBody EmailDetails emailDetails) {
+        AWSResponse response = emailService.sendMailToVerifiedUsers(emailDetails);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sendVerificationEmail/{email}")
+    public ResponseEntity<?> sendVerificationEmail(@PathVariable String email) {
+        String response = emailService.sendVerificationEmail(email);
         return ResponseEntity.ok(response);
     }
 

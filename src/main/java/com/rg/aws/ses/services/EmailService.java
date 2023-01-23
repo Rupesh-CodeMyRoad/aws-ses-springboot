@@ -11,4 +11,8 @@ public interface EmailService {
 //    String sendTemplateAttachEmail(EmailDetails emailDetails);
 
     AWSResponse sendPersonalizedTemplateEmail(EmailDetails emailDetails);
+
+    AWSResponse sendMailToVerifiedUsers(EmailDetails emailDetails);
+
+    String sendVerificationEmail(String email);
 }
