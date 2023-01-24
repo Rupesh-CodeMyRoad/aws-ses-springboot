@@ -1,16 +1,19 @@
 package com.rg.aws.ses.dto;
 
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Getter@ToString
 @Setter
 public class EmailDetails {
     String fromEmail;
@@ -19,6 +22,6 @@ public class EmailDetails {
     String body;
 
     List<String> toEmailList;
-
-    MultipartFile attachment;
+    String templateName;
+    Set<MultipartFile> attachment;
 }

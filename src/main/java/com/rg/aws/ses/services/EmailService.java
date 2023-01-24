@@ -4,7 +4,7 @@ import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
 
 public interface EmailService {
-    String sendMessage(EmailDetails emailDetails);
+   // String sendMessage(EmailDetails emailDetails);
 
     String sendAttachMessage(EmailDetails emailDetails);
 
