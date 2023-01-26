@@ -12,6 +12,9 @@ import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.services.EmailService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class AwsController {
 
@@ -73,6 +76,15 @@ public class AwsController {
     public ResponseEntity<?> sendVerificationEmail(@PathVariable String email) {
         String response = emailService.sendVerificationEmail(email);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sendString")
+    public List<String> testAPI(@RequestBody String data) {
+        List<String> response = new ArrayList<>();
+        response.add(data);
+        response.add("Gaudel");
+        response.add("Regmi");
+        return response;
     }
 
 

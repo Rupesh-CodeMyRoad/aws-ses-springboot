@@ -9,7 +9,6 @@ import java.util.Objects;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -38,6 +37,7 @@ import com.rg.aws.ses.utils.EmailValidation;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.utils.CollectionUtils;
 
 @Slf4j
 @Service
@@ -63,7 +63,7 @@ public class EmailServiceImpl implements EmailService {
 			MimeMessage message = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 					StandardCharsets.UTF_8.name());
-			if (CollectionUtils.isNotEmpty(emailDetails.getAttachment())) {
+			if (CollectionUtils.isNotEmpty((Map<?, ?>) emailDetails.getAttachment())) {
 				emailDetails.getAttachment().stream().forEach(file->{
 					try {
 						helper.addAttachment(file.getOriginalFilename(), file);
