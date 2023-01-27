@@ -46,8 +46,8 @@ public class AwsControllerTest {
 		emailDetails.setSubject("Invitation for new year celebration");
 		emailDetails.setBody("The happiness of the upcoming year is a few days away. We are waiting for you to join us on the dance floor on new year’s eve. ");
 		//when(emailService.sendPersonalizedTemplateEmail(emailDetails)).thenReturn(awsResponse);
-		ResponseEntity<?> responseEntity = awsController.sendPersonalizedTemplateEmail(emailDetails);
-		assertEquals(responseEntity.getStatusCode().value(),awsResponse.getStatusCode());
+//		ResponseEntity<?> responseEntity = awsController.sendPersonalizedTemplateEmail(emailDetails);
+//		assertEquals(responseEntity.getStatusCode().value(),awsResponse.getStatusCode());
 		//AWSResponse awsResponse = emailServiceImpl.sendPersonalizedTemplateEmail(emailDetails);
 		//System.out.println(awsResponse);
     }

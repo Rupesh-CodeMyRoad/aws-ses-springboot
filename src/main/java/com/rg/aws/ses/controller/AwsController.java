@@ -1,19 +1,12 @@
 package com.rg.aws.ses.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.rg.aws.ses.dto.AWSResponse;
 import com.rg.aws.ses.dto.EmailDetails;
 import com.rg.aws.ses.services.EmailService;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class AwsController {
@@ -53,9 +46,10 @@ public class AwsController {
      * @return
      */
     @PostMapping("/sendPersonalizedTemplateEmail")
-    public ResponseEntity<?> sendPersonalizedTemplateEmail(@RequestBody EmailDetails emailDetails) {
+    public Mono<AWSResponse> sendPersonalizedTemplateEmail(@RequestBody EmailDetails emailDetails) {
         AWSResponse response = emailService.sendPersonalizedTemplateEmail(emailDetails);
-        return ResponseEntity.ok(response);
+        Mono<AWSResponse> data = Mono.just(response);
+        return data;
     }
 
     /**
@@ -78,14 +72,11 @@ public class AwsController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/sendString")
-    public List<String> testAPI(@RequestBody String data) {
-        List<String> response = new ArrayList<>();
-        response.add(data);
-        response.add("Gaudel");
-        response.add("Regmi");
+    @GetMapping("/{name}")
+    private Mono<String> getEmployeeById(@PathVariable String name) {
+        System.out.println("Calling SES");
+        Mono<String> response = Mono.just(name+" Gaudel Regmi");
         return response;
     }
-
 
 }
