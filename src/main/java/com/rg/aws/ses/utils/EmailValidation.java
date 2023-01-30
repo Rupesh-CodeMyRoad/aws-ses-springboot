@@ -18,17 +18,17 @@ public class EmailValidation {
 
     public static void validateEmails(EmailDetails emailDetails) {
         if (EmailValidation.validate(emailDetails.getFromEmail())) {
-            log.error("From mail : {}", emailDetails.getFromEmail());
+            log.info("From mail : {}", emailDetails.getFromEmail());
             if (emailDetails.getToEmailList().isEmpty()) {
                 if (EmailValidation.validate(emailDetails.getToEmail())) {
-                    log.error("To mail : {}", emailDetails.getToEmail());
+                    log.info("To mail : {}", emailDetails.getToEmail());
                 } else {
                     throw new EmailValidationException("Email address Mismatch in to mail : " + emailDetails.getToEmail());
                 }
             } else {
                 for (String email : emailDetails.getToEmailList()) {
                     if (EmailValidation.validate(email)) {
-                        log.error("To mail : {}", email);
+                        log.info("To mail : {}", email);
                     } else {
                         throw new EmailValidationException("Email address Mismatch in to mail : " + email);
                     }
