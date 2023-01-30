@@ -28,8 +28,10 @@ public class AwsController {
      * @return
      */
     @PostMapping("/sendAttachEmail")
-    public String sendAttachEmail(@ModelAttribute EmailDetails emailDetails) {
-        return emailService.sendAttachMessage(emailDetails);
+    public Mono<String> sendAttachEmail(@ModelAttribute EmailDetails emailDetails) {
+        String response = emailService.sendAttachMessage(emailDetails);
+        Mono<String> data = Mono.just(response);
+        return data;
     }
 
     /**
